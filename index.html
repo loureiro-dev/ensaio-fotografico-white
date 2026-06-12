@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LensAI – Ensaios Fotográficos com Inteligência Artificial</title>
+  <meta name="description"
+    content="Transforme uma foto simples em um ensaio fotográfico profissional com IA. Por apenas R$19,90.">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- High-End UI Libraries -->
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/styles.css"/>
+  <script defer src="https://cdn.jsdelivr.net/npm/img-comparison-slider@8/dist/index.js"></script>
+  <style>
+    :root {
+      --primary: #10B981;
+      /* Esmeralda Vibrante */
+      --primary-light: #34D399;
+      --primary-dark: #059669;
+      --bg: #121212;
+      --bg2: #1A1A1A;
+      --bg3: #222222;
+      --text: #F0F0F0;
+      --muted: #888;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background: rgba(18, 18, 18, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--primary);
+      letter-spacing: 2px;
+    }
+
+    .header-cta {
+      background: var(--primary);
+      color: #fff;
+      padding: .5rem 1.25rem;
+      border-radius: 4px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: .85rem;
+      transition: background .2s;
+    }
+
+    .header-cta:hover {
+      background: var(--primary-light);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 1.5rem 4rem;
+      background: radial-gradient(ellipse at 50% 30%, rgba(16, 185, 129, 0.12) 0%, transparent 70%), var(--bg);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      /* Updated inline SVG with #10B981 */
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310B981' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: var(--primary);
+      padding: .35rem 1rem;
+      border-radius: 50px;
+      font-size: .8rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1.15;
+      max-width: 800px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--primary);
+    }
+
+    .hero p {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 540px;
+      margin-bottom: 2.5rem;
+    }
+
+    .hero-price {
+      font-size: 1rem;
+      color: var(--muted);
+      margin-bottom: .5rem;
+    }
+
+    .hero-price strong {
+      color: var(--primary);
+      font-size: 2rem;
+    }
+
+    .scroll-indicator {
+      margin-top: 3rem;
+      animation: bounce 2s infinite;
+    }
+
+    .scroll-indicator span {
+      display: block;
+      width: 24px;
+      height: 24px;
+      border-right: 2px solid var(--primary);
+      border-bottom: 2px solid var(--primary);
+      transform: rotate(45deg);
+      margin: auto;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0)
+      }
+
+      50% {
+        transform: translateY(8px)
+      }
+    }
+
+    /* ── SECTION TITLE ── */
+    .section {
+      padding: 6rem 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .section-title h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      margin-bottom: .75rem;
+    }
+
+    .section-title h2 span {
+      color: var(--primary);
+    }
+
+    .section-title p {
+      color: var(--muted);
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .primary-line {
+      width: 60px;
+      height: 2px;
+      background: var(--primary);
+      margin: 1rem auto;
+    }
+
+    /* ── PORTFOLIO ── */
+    .portfolio {
+      background: var(--bg2);
+    }
+
+    .portfolio-grid-wrapper {
+      overflow-x: auto;
+      white-space: nowrap;
+      width: 100vw;
+      position: relative;
+      left: 50%;
+      right: 50%;
+      margin-left: -50vw;
+      margin-right: -50vw;
+      padding: 1rem 0 2rem 0;
+      scrollbar-width: thin;
+      scrollbar-color: var(--primary) var(--bg3);
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .portfolio-grid-wrapper::-webkit-scrollbar {
+      height: 6px;
+    }
+    .portfolio-grid-wrapper::-webkit-scrollbar-track {
+      background: var(--bg3);
+      border-radius: 4px;
+    }
+    .portfolio-grid-wrapper::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    .portfolio-grid {
+      display: inline-flex;
+      gap: 1.5rem;
+      padding: 0 1.5rem;
+    }
+
+    .card {
+      flex: 0 0 250px;
+      white-space: normal;
+      background: var(--bg3);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(16, 185, 129, 0.15);
+      transition: transform .3s, border-color .3s, box-shadow .3s;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(16, 185, 129, 0.5);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-images {
+      position: relative;
+      height: 300px;
+    }
+
+    .card-images img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .card-body {
+      padding: 1.25rem;
+    }
+
+    .card-body h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.1rem;
+      margin-bottom: .35rem;
+    }
+
+    .card-body p {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    .card-tag {
+      display: inline-block;
+      margin-top: .75rem;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--primary);
+      font-size: .75rem;
+      padding: .2rem .75rem;
+      border-radius: 50px;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      background: var(--bg);
+    }
+
+    .form-wrapper {
+      max-width: 640px;
+      margin: 0 auto;
+      background: rgba(34, 34, 34, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 16px;
+      padding: 2.5rem;
+      box-shadow: 0 0 60px rgba(16, 185, 129, 0.08), inset 0 0 20px rgba(255, 255, 255, 0.02);
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: .85rem;
+      font-weight: 500;
+      margin-bottom: .5rem;
+      color: var(--primary);
+      letter-spacing: .5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      width: 100%;
+      padding: .85rem 1rem;
+      background: var(--bg3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      transition: border-color .2s, box-shadow .2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    }
+
+    .form-group select option {
+      background: var(--bg3);
+    }
+
+    .upload-area {
+      border: 2px dashed rgba(16, 185, 129, 0.35);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color .2s, background .2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .upload-area:hover {
+      border-color: var(--primary);
+      background: rgba(16, 185, 129, 0.04);
+    }
+
+    /* ── SCANNER EFFECT ── */
+    .scanner-laser {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--primary);
+      box-shadow: 0 0 15px 3px var(--primary);
+      opacity: 0;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .scanner-laser.active {
+      opacity: 0.8;
+      animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      50% { top: 100%; }
+      100% { top: 0; }
+    }
+
+    .upload-area input[type=file] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-icon {
+      font-size: 2.5rem;
+      margin-bottom: .5rem;
+      color: var(--primary);
+    }
+
+    .upload-icon i {
+      font-size: 2.5rem;
+    }
+
+    .form-group label i {
+      margin-right: .35rem;
+      vertical-align: -2px;
+      color: var(--primary);
+    }
+
+    /* ── THEME SELECTOR ── */
+    .theme-selector {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    .theme-option {
+      background: var(--theme-bg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 1rem 0.5rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      user-select: none;
+    }
+
+    .theme-option i {
+      font-size: 2rem;
+      color: var(--theme-color);
+      transition: all 0.2s;
+    }
+
+    .theme-option span {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+
+    .theme-option:hover {
+      border-color: var(--theme-color);
+      transform: translateY(-2px);
+    }
+
+    .theme-option.selected {
+      background: var(--theme-color);
+      border-color: var(--theme-color);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+    
+    .theme-option.selected i,
+    .theme-option.selected span {
+      color: #ffffff;
+    }
+
+    /* ── PIX AREA ── */
+    #pix-area {
+      display: none;
+      margin-top: 2rem;
+      background: var(--bg3);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      animation: fadeIn .4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    #pix-area h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      margin-bottom: .4rem;
+      color: var(--primary);
+    }
+
+    #pix-area p {
+      color: var(--muted);
+      font-size: .88rem;
+      margin-bottom: 1.25rem;
+    }
+
+    #pix-qr {
+      width: 200px;
+      height: 200px;
+      border-radius: 8px;
+      border: 3px solid var(--primary);
+      margin: 0 auto 1.25rem;
+      display: block;
+      background: #fff;
+    }
+
+    .pix-copy-row {
+      display: flex;
+      gap: .5rem;
+      align-items: center;
+    }
+
+    #pix-copia-cola {
+      flex: 1;
+      padding: .75rem 1rem;
+      background: var(--bg2);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: .82rem;
+      font-family: 'Inter', monospace;
+      cursor: text;
+      outline: none;
+    }
+
+    #btn-copiar-pix {
+      padding: .75rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--primary);
+      background: transparent;
+      color: var(--primary);
+      cursor: pointer;
+      transition: background .2s, color .2s;
+      font-size: .9rem;
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      white-space: nowrap;
+    }
+
+    #btn-copiar-pix:hover {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    #btn-copiar-pix.copied {
+      background: #10B981;
+      border-color: #10B981;
+      color: #fff;
+    }
+
+    .pix-note {
+      margin-top: 1rem;
+      font-size: .78rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .35rem;
+    }
+
+    .upload-area p {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .upload-area strong {
+      color: var(--primary);
+    }
+
+    .upload-preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      display: none;
+      z-index: 5;
+    }
+
+    .file-info {
+      font-size: .78rem;
+      color: var(--muted);
+      margin-top: .4rem;
+      text-align: center;
+    }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .btn {
+      padding: 1rem;
+      border-radius: 8px;
+      font-size: .95rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--primary-light), var(--primary));
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .btn-whatsapp {
+      background: #25D366;
+      color: #fff;
+    }
+
+    .btn-whatsapp:hover {
+      background: #1ebe5d;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35);
+      transform: translateY(-2px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* Loading overlay */
+    #loading-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(4px);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1.5rem;
+    }
+
+    #loading-overlay.active {
+      display: flex;
+    }
+
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(16, 185, 129, 0.2);
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    #loading-overlay p {
+      color: var(--primary);
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--bg2);
+      border-top: 1px solid rgba(16, 185, 129, 0.15);
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+
+    footer p {
+      color: var(--muted);
+      font-size: .85rem;
+    }
+
+    footer a {
+      color: var(--primary);
+      text-decoration: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width: 580px) {
+      .btn-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-wrapper {
+        padding: 1.5rem;
+      }
+
+      header {
+        padding: .75rem 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loading-overlay">
+    <div class="spinner"></div>
+    <p>Gerando seu pagamento seguro...</p>
+  </div>
+
+  <!-- HEADER -->
+  <header>
+    <div class="logo"><i class="ph ph-sparkle" style="margin-right:4px;"></i>LensAI</div>
+    <a href="#form" class="header-cta">Criar Meu Ensaio →</a>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="badge"><i class="ph ph-magic-wand"></i> Powered by Artificial Intelligence</div>
+    <h1>Seu Ensaio Fotográfico <em>Profissional</em> em Minutos</h1>
+    <p>Envie uma foto simples do seu rosto e nossa IA transforma em um ensaio de estúdio deslumbrante — sem câmera, sem
+      fotógrafo, sem complicação.</p>
+    <p class="hero-price">Apenas <strong>R$ 19,90</strong> por ensaio completo</p>
+    <a href="#form" class="btn btn-primary"
+      style="display:inline-flex;align-items:center;gap:.5rem;text-decoration:none;padding:1rem 2rem;border-radius:8px;margin-top:1rem;">
+      <i class="ph ph-sparkle"></i> Criar Meu Ensaio Agora
+    </a>
+    <div class="scroll-indicator"><span></span></div>
+  </section>
+
+  <!-- PORTFOLIO -->
+  <section class="section portfolio" id="portfolio">
+    <div class="section-title" data-aos="fade-up">
+      <h2>Estúdio <span>LensAI</span></h2>
+      <div class="primary-line"></div>
+      <p>Resultados de altíssima qualidade gerados pela nossa inteligência artificial</p>
+    </div>
+    
+    <div class="portfolio-grid-wrapper">
+      <div class="portfolio-grid">
+
+        <!-- Card 1 -->
+        <div class="card">
+          <div class="card-images">
+            <img src="https://placehold.co/320x380/0B281B/10B981?text=Resultado+Final" alt="Foto profissional IA">
+          </div>
+          <div class="card-body">
+            <h3>Ensaio de Aniversário</h3>
+            <span class="card-tag"><i class="ph ph-cake"></i> Aniversário</span>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="card">
+          <div class="card-images">
+            <img src="https://placehold.co/320x380/0d1f18/10B981?text=Resultado+Final" alt="Foto ensaio gestante IA">
+          </div>
+          <div class="card-body">
+            <h3>Ensaio de Gravidez</h3>
+            <span class="card-tag"><i class="ph ph-baby"></i> Gravidez</span>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="card">
+          <div class="card-images">
+            <img src="https://placehold.co/320x380/0e2118/10B981?text=Resultado+Final" alt="Foto profissional">
+          </div>
+          <div class="card-body">
+            <h3>Ensaio Profissional</h3>
+            <span class="card-tag"><i class="ph ph-briefcase"></i> Profissional</span>
+          </div>
+        </div>
+        
+        <!-- Duplicated Cards for infinite scroll loop -->
+        <div class="card">
+          <div class="card-images">
+            <img src="https://placehold.co/320x380/0B281B/10B981?text=Resultado+Final" alt="Foto profissional IA">
+          </div>
+          <div class="card-body">
+            <h3>Ensaio de Aniversário</h3>
+            <span class="card-tag"><i class="ph ph-cake"></i> Aniversário</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-images">
+            <img src="https://placehold.co/320x380/0d1f18/10B981?text=Resultado+Final" alt="Foto ensaio gestante IA">
+          </div>
+          <div class="card-body">
+            <h3>Ensaio de Gravidez</h3>
+            <span class="card-tag"><i class="ph ph-baby"></i> Gravidez</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-images">
+            <img src="https://placehold.co/320x380/0e2118/10B981?text=Resultado+Final" alt="Foto profissional">
+          </div>
+          <div class="card-body">
+            <h3>Ensaio Profissional</h3>
+            <span class="card-tag"><i class="ph ph-briefcase"></i> Profissional</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FORM -->
+  <section class="section form-section" id="form">
+    <div class="section-title" data-aos="fade-up">
+      <h2>Crie <span>Seu Ensaio</span></h2>
+      <div class="primary-line"></div>
+      <p>Preencha o formulário abaixo e receba seu ensaio exclusivo por apenas R$ 19,90</p>
+    </div>
+
+    <div class="form-wrapper" data-aos="fade-up" data-aos-delay="100">
+      <form id="ensaio-form" novalidate>
+
+        <div class="form-group">
+          <label for="foto-upload"><i class="ph ph-camera"></i> Sua Foto (rosto de frente, boa iluminação)</label>
+          <div class="upload-area" id="upload-area">
+            <div id="scanner-laser" class="scanner-laser"></div>
+            <input type="file" id="foto-upload" name="foto" accept="image/jpeg,image/png,image/webp" required>
+            <div class="upload-icon"><i class="ph ph-upload-simple"></i></div>
+            <p><strong>Arraste ou clique</strong> para enviar sua foto</p>
+            <p>JPG, PNG ou WEBP · Máx. 2MB</p>
+            <img id="upload-preview" class="upload-preview" alt="Prévia da sua foto">
+          </div>
+          <p class="file-info" id="file-info"></p>
+        </div>
+
+        <div class="form-group">
+          <label><i class="ph ph-palette"></i> Tema do Ensaio</label>
+          <div class="theme-selector" id="theme-selector">
+            <div class="theme-option" data-value="Aniversário" style="--theme-color: #f59e0b; --theme-bg: rgba(245, 158, 11, 0.08);">
+              <i class="ph ph-cake"></i>
+              <span>Aniversário</span>
+            </div>
+            <div class="theme-option" data-value="Gravidez" style="--theme-color: #ec4899; --theme-bg: rgba(236, 72, 153, 0.08);">
+              <i class="ph ph-baby"></i>
+              <span>Maternidade</span>
+            </div>
+            <div class="theme-option" data-value="Profissional" style="--theme-color: #3b82f6; --theme-bg: rgba(59, 130, 246, 0.08);">
+              <i class="ph ph-briefcase"></i>
+              <span>Profissional</span>
+            </div>
+            <div class="theme-option" data-value="Outro" style="--theme-color: #8b5cf6; --theme-bg: rgba(139, 92, 246, 0.08);">
+              <i class="ph ph-sparkle"></i>
+              <span>Tema Livre</span>
+            </div>
+          </div>
+          <input type="hidden" id="tema-select" name="tema" required>
+        </div>
+
+        <div class="form-group" id="custom-tema-group" style="display:none;">
+          <label for="tema-custom-input"><i class="ph ph-magic-wand"></i> Descreva o seu cenário dos sonhos</label>
+          <input type="text" id="tema-custom-input" placeholder="Ex: Guerreiro Viking, Fada numa floresta, Chef de Cozinha..." autocomplete="off">
+          <p style="font-size:0.78rem; color:var(--muted); margin-top:.4rem;"><i class="ph ph-sparkle"></i> A IA vai transformar sua ideia em fotos cinematográficas!</p>
+        </div>
+
+        <div class="form-group">
+          <label for="nome-input"><i class="ph ph-user"></i> Seu Nome Completo</label>
+          <input type="text" id="nome-input" name="nome" placeholder="Como devemos te chamar?" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email-input"><i class="ph ph-envelope-simple"></i> Seu E-mail (Onde receberá as fotos)</label>
+          <input type="email" id="email-input" name="email" placeholder="seu.email@exemplo.com" required>
+        </div>
+
+        <div class="form-group">
+          <label for="whatsapp-input"><i class="ph ph-whatsapp-logo"></i> Seu WhatsApp <span
+              style="font-size:0.75rem; color:var(--muted); font-weight:normal;">(Opcional - Avisos via
+              celular)</span></label>
+          <input type="tel" id="whatsapp-input" name="whatsapp" placeholder="(11) 99999-9999">
+        </div>
+
+        <div class="btn-row" id="btn-row">
+          <button type="button" class="btn btn-primary" id="btn-web">
+            <i class="ph ph-qr-code"></i> Gerar Ensaio + PIX
+          </button>
+          <button type="button" class="btn btn-whatsapp" id="btn-whatsapp">
+            <i class="ph ph-whatsapp-logo"></i> Falar com Suporte
+          </button>
+        </div>
+
+        <p
+          style="text-align:center;color:var(--muted);font-size:.78rem;margin-top:1rem;display:flex;align-items:center;justify-content:center;gap:.35rem;">
+          <i class="ph ph-lock-key" style="color:var(--primary)"></i> Pagamento 100% seguro · Entrega automática
+        </p>
+      </form>
+
+      <!-- PIX AREA -->
+      <div id="pix-area">
+        <h3>Etapa Final — Pague com PIX</h3>
+        <p style="margin-bottom:0.5rem">Escaneie o QR Code ou copie o código abaixo.</p>
+        <div style="background: rgba(16,185,129,0.1); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+          <p style="color: var(--primary); margin:0; font-size: 0.9rem;">
+            <i class="ph ph-check-circle"></i> Após o pagamento, você pode fechar esta página. Suas fotos serão
+            entregues no seu <strong>E-mail</strong> em minutos!
+          </p>
+        </div>
+
+        <img id="pix-qr" src="" alt="QR Code PIX">
+
+        <div class="pix-copy-row">
+          <input type="text" id="pix-copia-cola" readonly placeholder="Aguardando código PIX...">
+          <button id="btn-copiar-pix" type="button">
+            <i class="ph ph-copy"></i> Copiar
+          </button>
+        </div>
+        <p class="pix-note"><i class="ph ph-clock" style="color:var(--primary)"></i> O PIX expira em 30 minutos</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p><i class="ph ph-sparkle"></i> <strong style="color:var(--primary)">LensAI</strong> &copy; 2024 · Ensaios
+      fotográficos com Inteligência Artificial</p>
+    <p style="margin-top:.5rem;"><a href="#">Política de Privacidade</a> · <a href="#">Termos de Uso</a></p>
+  </footer>
+
+  <script>
+    (function () {
+      const WEBHOOK_URL = 'http://localhost:5678/webhook-test/comprar-web';
+      const WHATSAPP_NUMBER = '5511999999999';
+      const MAX_SIZE_MB = 2;
+
+      const fotoInput = document.getElementById('foto-upload');
+      const preview = document.getElementById('upload-preview');
+      const fileInfo = document.getElementById('file-info');
+      const temaSelect = document.getElementById('tema-select');
+      const nomeInput = document.getElementById('nome-input');
+      const emailInput = document.getElementById('email-input');
+      const whatsappInput = document.getElementById('whatsapp-input');
+      const overlay = document.getElementById('loading-overlay');
+      const btnRow = document.getElementById('btn-row');
+      const pixArea = document.getElementById('pix-area');
+      const pixQr = document.getElementById('pix-qr');
+      const pixCopiaCola = document.getElementById('pix-copia-cola');
+      const btnCopiar = document.getElementById('btn-copiar-pix');
+      const scannerLaser = document.getElementById('scanner-laser');
+
+      // ── Prévia da imagem ──
+      fotoInput.addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) {
+          scannerLaser.classList.remove('active');
+          return;
+        }
+        if (file.size > MAX_SIZE_MB * 1024 * 1024) {
+          alert('A imagem deve ter no máximo 2MB. Por favor, escolha uma menor.');
+          this.value = '';
+          preview.style.display = 'none';
+          fileInfo.textContent = '';
+          scannerLaser.classList.remove('active');
+          return;
+        }
+        fileInfo.textContent = `Arquivo: ${file.name} (${(file.size / 1024).toFixed(0)}KB)`;
+        const reader = new FileReader();
+        reader.onload = e => { 
+          preview.src = e.target.result; 
+          preview.style.display = 'block';
+          scannerLaser.classList.add('active'); 
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // ── Campo Custom (Tema Livre) ──
+      const customTemaGroup = document.getElementById('custom-tema-group');
+      const customTemaInput = document.getElementById('tema-custom-input');
+      const themeOptions = document.querySelectorAll('.theme-option');
+      const hiddenTemaInput = document.getElementById('tema-select');
+
+      themeOptions.forEach(option => {
+        option.addEventListener('click', function() {
+          // Remove selected class from all
+          themeOptions.forEach(opt => opt.classList.remove('selected'));
+          // Add to clicked
+          this.classList.add('selected');
+          
+          const value = this.getAttribute('data-value');
+          hiddenTemaInput.value = value;
+          
+          if (value === 'Outro') {
+            customTemaGroup.style.display = 'block';
+            customTemaInput.required = true;
+            customTemaInput.focus();
+          } else {
+            customTemaGroup.style.display = 'none';
+            customTemaInput.required = false;
+            customTemaInput.value = '';
+          }
+        });
+      });
+
+      // ── Validação ──
+      function validate() {
+        const file = fotoInput.files[0];
+        const tema = hiddenTemaInput.value;
+        const nome = nomeInput.value.trim();
+        const email = emailInput.value.trim();
+
+        if (!file) { alert('Por favor, envie uma foto do seu rosto.'); return false; }
+        if (!tema) { alert('Por favor, selecione o tema do ensaio.'); return false; }
+        if (tema === 'Outro' && !customTemaInput.value.trim()) {
+          alert('Por favor, descreva o cenário que você deseja para o seu ensaio!'); return false;
+        }
+        if (!nome) { alert('Por favor, informe seu Nome.'); return false; }
+        if (!email) { alert('Por favor, informe seu E-mail para receber as fotos.'); return false; }
+        return true;
+      }
+
+      function toBase64(file) {
+        return new Promise((res, rej) => {
+          const r = new FileReader();
+          r.onload = () => res(r.result.split(',')[1]);
+          r.onerror = rej;
+          r.readAsDataURL(file);
+        });
+      }
+
+      // ── Exibe área PIX ──
+      function showPix(codigoPix) {
+        pixCopiaCola.value = codigoPix;
+        pixQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(codigoPix)}`;
+        btnRow.style.display = 'none';
+        pixArea.style.display = 'block';
+        pixArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+
+      // ── BOTÃO A: Gerar Ensaio + PIX ──
+      document.getElementById('btn-web').addEventListener('click', async () => {
+        if (!validate()) return;
+
+        const file = fotoInput.files[0];
+        const tema = hiddenTemaInput.value;
+        const nome = nomeInput.value.trim();
+        const email = emailInput.value.trim();
+        const wpp = whatsappInput.value.trim();
+
+        overlay.classList.add('active');
+
+        try {
+          const base64 = await toBase64(file);
+
+          const payload = {
+            foto_base64: base64,
+            tema: tema,
+            tema_custom: tema === 'Outro' ? customTemaInput.value.trim() : '',
+            nome: nome,
+            email: email,
+            whatsapp: wpp,
+            mime_type: file.type,
+            source: 'web',
+            timestamp: new Date().toISOString()
+          };
+
+          const resp = await fetch(WEBHOOK_URL, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Webhook-Token': 'SEU_TOKEN_SECRETO'
+            },
+            body: JSON.stringify(payload)
+          });
+
+          overlay.classList.remove('active');
+
+          if (resp.ok) {
+            const data = await resp.json();
+            if (data && data.pix_copia_e_cola) {
+              showPix(data.pix_copia_e_cola);
+            } else {
+              alert('Pedido recebido! Em breve entraremos em contato pelo e-mail e whatsapp.');
+            }
+          } else {
+            alert(`Erro ao enviar (${resp.status}). Tente novamente ou chame no suporte.`);
+          }
+        } catch (err) {
+          overlay.classList.remove('active');
+          console.error(err);
+          alert('Não foi possivel conectar ao servidor. Chame no suporte ou verifique sua conexao.');
+        }
+      });
+
+      // ── BOTÃO Copiar PIX ──
+      btnCopiar.addEventListener('click', () => {
+        navigator.clipboard.writeText(pixCopiaCola.value).then(() => {
+          btnCopiar.classList.add('copied');
+          btnCopiar.innerHTML = '<i class="ph ph-check"></i> Copiado!';
+          setTimeout(() => {
+            btnCopiar.classList.remove('copied');
+            btnCopiar.innerHTML = '<i class="ph ph-copy"></i> Copiar';
+          }, 2500);
+        });
+      });
+
+      // ── BOTÃO B: Suporte WhatsApp ──
+      document.getElementById('btn-whatsapp').addEventListener('click', () => {
+        const msg = encodeURIComponent(`Olá! Estou no site e preciso de ajuda com meu ensaio com IA.`);
+        window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, '_blank');
+      });
+
+      // ── Init High-End Libs ──
+      AOS.init({ once: true, duration: 800, offset: 50 });
+
+      // ── Auto Scroll Portfolio ──
+      const portfolioWrapper = document.querySelector('.portfolio-grid-wrapper');
+      if (portfolioWrapper) {
+        let isPaused = false;
+        let scrollSpeed = 1; // Pixels per frame
+        
+        portfolioWrapper.addEventListener('mouseenter', () => isPaused = true);
+        portfolioWrapper.addEventListener('mouseleave', () => isPaused = false);
+        portfolioWrapper.addEventListener('touchstart', () => isPaused = true);
+        portfolioWrapper.addEventListener('touchend', () => { setTimeout(() => isPaused = false, 1500) });
+
+        function autoScroll() {
+          if (!isPaused) {
+            portfolioWrapper.scrollLeft += scrollSpeed;
+            // Se chegou no fim (ou quase no fim por conta de frações), reseta para o começo
+            if (portfolioWrapper.scrollLeft >= (portfolioWrapper.scrollWidth - portfolioWrapper.clientWidth - 2)) {
+              portfolioWrapper.scrollLeft = 0;
+            }
+          }
+          requestAnimationFrame(autoScroll);
+        }
+        requestAnimationFrame(autoScroll);
+      }
+
+    })();
+  </script>
+</body>
+
+</html>
