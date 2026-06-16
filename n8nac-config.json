@@ -7,6 +7,12 @@
       "name": "N8N",
       "kind": "external-instance",
       "url": "http://localhost:5678"
+    },
+    {
+      "id": "n8n-2-2",
+      "name": "N8N 2",
+      "kind": "external-instance",
+      "url": "https://n8n.meuensaio.digital"
     }
   ],
   "environments": [
@@ -14,7 +20,7 @@
       "id": "n8n-2",
       "name": "N8N",
       "syncSlug": "n8n",
-      "environmentTargetId": "n8n",
+      "environmentTargetId": "n8n-2-2",
       "projectId": "personal",
       "projectName": "Personal",
       "workflowsPath": "workflows/n8n",

@@ -1,0 +1,112 @@
+{
+  "version": "6",
+  "name": "Ensaio.AI Roteamento e Checkout",
+  "groups": [
+    {
+      "id": "group_1",
+      "title": "Recepção",
+      "blocks": [
+        {
+          "id": "block_cond_1",
+          "type": "Condition",
+          "options": {
+            "conditions": [
+              {
+                "comparisons": [
+                  {
+                    "variableId": "var_msg_inicial",
+                    "operator": "Contains",
+                    "value": "R$"
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "group_2",
+      "title": "Menu Opções (Lead Genérico)",
+      "blocks": [
+        {
+          "id": "block_txt_1",
+          "type": "Text",
+          "content": {
+            "html": "Olá! Que ótimo ter você aqui na Ensaio.AI. 📸✨"
+          }
+        },
+        {
+          "id": "block_txt_2",
+          "type": "Text",
+          "content": {
+            "html": "Vi que você chegou pelo nosso site. Você já tem algum pacote em mente ou quer conhecer nossas opções?"
+          }
+        },
+        {
+          "id": "block_choice_1",
+          "type": "Choice",
+          "items": [
+            {
+              "id": "item_essencial",
+              "content": "Pacote Essencial (R$ 29)"
+            },
+            {
+              "id": "item_profissional",
+              "content": "Pacote Profissional (R$ 59)"
+            },
+            {
+              "id": "item_premium",
+              "content": "Pacote Premium (R$ 99)"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "group_3",
+      "title": "Checkout e Pix",
+      "blocks": [
+        {
+          "id": "block_txt_3",
+          "type": "Text",
+          "content": {
+            "html": "Excelente escolha! O pacote escolhido é perfeito para destacar a sua imagem."
+          }
+        },
+        {
+          "id": "block_input_1",
+          "type": "TextInput",
+          "options": {
+            "variableId": "var_nome_cliente"
+          }
+        },
+        {
+          "id": "block_txt_4",
+          "type": "Text",
+          "content": {
+            "html": "Aguarde um instante, estou gerando a sua chave Pix..."
+          }
+        }
+      ]
+    }
+  ],
+  "variables": [
+    {
+      "id": "var_msg_inicial",
+      "name": "MensagemInicial"
+    },
+    {
+      "id": "var_nome_cliente",
+      "name": "NomeCliente"
+    },
+    {
+      "id": "var_pacote",
+      "name": "PacoteEscolhido"
+    },
+    {
+      "id": "var_valor",
+      "name": "ValorPix"
+    }
+  ]
+}

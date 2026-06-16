@@ -1,43 +1,37 @@
 import { workflow, node, links } from '@n8n-as-code/transformer';
 
 // <workflow-map>
-// Workflow : LensAI - Entrega Premium WhatsApp + Drive
-// Nodes   : 14  |  Connections: 13
+// Workflow : LensAI - Master Flow (Typebot + N8N + Evolution)
+// Nodes   : 11  |  Connections: 10
 //
 // NODE INDEX
 // ──────────────────────────────────────────────────────────────────
 // Property name                    Node type (short)         Flags
-// WebhookPixStatus                   webhook
-// VerificarPagamento                 if
-// EngenheiroDePromptGemini           googleGemini               [retry]
-// GerarImagemFalAi                   httpRequest
+// WebhookGatewayTypebot              webhook
+// CheckPaymentStatus                 if
+// DiscordVendaRealizada              httpRequest
+// MetaCapiPurchase                   httpRequest
+// GeminiEngenheiroDePrompt           googleGemini
+// FalAiLoopDeGeracao                 httpRequest
 // CriarPastaGoogleDrive              googleDrive
-// DownloadImagem                     httpRequest
-// UploadDrive                        googleDrive
-// AlterarPermissaoDrive              googleDrive
-// DisparoInstanciaA                  httpRequest
-// ChecarFalhaDeEntrega               if
-// DisparoBackupInstanciaB            httpRequest
-// VerificarPendente                  if
-// Aguardar20Minutos                  wait
-// DispararRecuperacaoTypebot         httpRequest
+// EvolutionApiEntregaVip             httpRequest
+// DiscordCarrinhoAbandonado          httpRequest
+// Aguardar15Minutos                  wait
+// EvolutionApiRecuperacao            httpRequest
 //
 // ROUTING MAP
 // ──────────────────────────────────────────────────────────────────
-// WebhookPixStatus
-//    → VerificarPagamento
-//      → EngenheiroDePromptGemini
-//        → GerarImagemFalAi
-//          → CriarPastaGoogleDrive
-//            → DownloadImagem
-//              → UploadDrive
-//                → AlterarPermissaoDrive
-//                  → DisparoInstanciaA
-//                    → ChecarFalhaDeEntrega
-//                      → DisparoBackupInstanciaB
-//     .out(1) → VerificarPendente
-//        → Aguardar20Minutos
-//          → DispararRecuperacaoTypebot
+// WebhookGatewayTypebot
+//    → CheckPaymentStatus
+//      → DiscordVendaRealizada
+//        → MetaCapiPurchase
+//          → GeminiEngenheiroDePrompt
+//            → FalAiLoopDeGeracao
+//              → CriarPastaGoogleDrive
+//                → EvolutionApiEntregaVip
+//     .out(1) → DiscordCarrinhoAbandonado
+//        → Aguardar15Minutos
+//          → EvolutionApiRecuperacao
 // </workflow-map>
 
 // =====================================================================
@@ -45,46 +39,44 @@ import { workflow, node, links } from '@n8n-as-code/transformer';
 // =====================================================================
 
 @workflow({
-    id: 'p0d51VcmYpojsIdT',
-    name: 'LensAI - Entrega Premium WhatsApp + Drive',
+    id: 'CzETZKj5pU9O1To6',
+    name: 'LensAI - Master Flow (Typebot + N8N + Evolution)',
     active: false,
     isArchived: false,
-    settings: { executionOrder: 'v1', binaryMode: 'separate' },
+    settings: { executionOrder: 'v1' },
 })
-export class LensaiEntregaPremiumWhatsappDriveWorkflow {
+export class LensaiMasterFlowTypebotN8nEvolutionWorkflow {
     // =====================================================================
     // CONFIGURATION DES NOEUDS
     // =====================================================================
 
     @node({
-        id: '1a85947c-be23-40e5-9f01-a249cfbe6cee',
-        webhookId: '073dde87-2a80-4802-a8e2-feb390ec14d5',
-        name: 'Webhook Pix Status',
+        id: 'webhook-checkout',
+        webhookId: 'lensai-master-webhook',
+        name: 'Webhook Gateway/Typebot',
         type: 'n8n-nodes-base.webhook',
         version: 2.1,
         position: [100, 300],
     })
-    WebhookPixStatus = {
+    WebhookGatewayTypebot = {
         responseBinaryPropertyName: 'data',
         multipleMethods: false,
         httpMethod: 'POST',
-        path: 'pix-status',
+        path: 'checkout-lensai',
         authentication: 'none',
         responseMode: 'onReceived',
         responseCode: 200,
     };
 
     @node({
-        id: '90d86f35-5286-49e6-8ab8-742688315028',
-        name: 'Verificar Pagamento',
+        id: 'if-payment',
+        name: 'Check Payment Status',
         type: 'n8n-nodes-base.if',
         version: 2.2,
         position: [350, 300],
     })
-    VerificarPagamento = {
+    CheckPaymentStatus = {
         conditions: {
-            boolean: [],
-            number: [],
             string: [
                 {
                     value1: '={{ $json.body.paymentStatus }}',
@@ -96,33 +88,78 @@ export class LensaiEntregaPremiumWhatsappDriveWorkflow {
     };
 
     @node({
-        id: '9955ac9a-38c5-4af8-879a-cd8dc9d6290a',
-        name: 'Engenheiro de Prompt (Gemini)',
+        id: 'discord-paid',
+        name: 'Discord: Venda Realizada',
+        type: 'n8n-nodes-base.httpRequest',
+        version: 4.4,
+        position: [600, 100],
+    })
+    DiscordVendaRealizada = {
+        url: 'https://discord.com/api/webhooks/SEU_WEBHOOK_AQUI',
+        method: 'POST',
+        sendBody: true,
+        specifyBody: 'json',
+        jsonBody: {
+            content: `💰 **NOVA VENDA LENS.AI!** 🎉
+**Cliente:** {{ $node['Webhook Gateway/Typebot'].json.body.clientName }}
+**Tema Escolhido:** {{ $node['Webhook Gateway/Typebot'].json.body.theme }}
+**Valor:** R$ {{ $node['Webhook Gateway/Typebot'].json.body.amount }}`,
+        },
+    };
+
+    @node({
+        id: 'meta-capi',
+        name: 'Meta CAPI (Purchase)',
+        type: 'n8n-nodes-base.httpRequest',
+        version: 4.4,
+        position: [850, 100],
+    })
+    MetaCapiPurchase = {
+        url: 'https://graph.facebook.com/v19.0/SEU_PIXEL_ID/events',
+        method: 'POST',
+        sendBody: true,
+        specifyBody: 'json',
+        jsonBody: {
+            data: [
+                {
+                    event_name: 'Purchase',
+                    event_time: '={{ Math.floor(Date.now() / 1000) }}',
+                    action_source: 'website',
+                    custom_data: {
+                        currency: 'BRL',
+                        value: "={{ $node['Webhook Gateway/Typebot'].json.body.amount }}",
+                    },
+                },
+            ],
+            access_token: 'SEU_TOKEN_CAPI',
+        },
+    };
+
+    @node({
+        id: 'gemini-prompt',
+        name: 'Gemini (Engenheiro de Prompt)',
         type: '@n8n/n8n-nodes-langchain.googleGemini',
         version: 1.2,
-        position: [600, 100],
-        retryOnFail: true,
-        maxTries: 3,
-        waitBetweenTries: 5000,
+        position: [1100, 100],
     })
-    EngenheiroDePromptGemini = {
+    GeminiEngenheiroDePrompt = {
         resource: 'text',
         operation: 'generate',
         modelId: {
             mode: 'list',
             value: 'gemini-1.5-flash',
         },
-        text: "Atue como um fotógrafo profissional e especialista em IA. O cliente pediu o seguinte estilo de foto: {{ $node['Webhook Pix Status'].json.body.style }}. Traduza isso para um prompt em INGLÊS altamente técnico, focado em hiper-realismo e resolução 8k para a ferramenta fal.ai. Retorne APENAS o prompt em inglês.",
+        text: "Atue como um diretor de arte de IA. O cliente solicitou um ensaio com o tema: '{{ $node['Webhook Gateway/Typebot'].json.body.theme }}'. Traduza este tema para um prompt altamente detalhado e hiper-realista em inglês para o motor FLUX. Retorne APENAS o prompt.",
     };
 
     @node({
-        id: 'b8cc18f1-c7b8-44e5-92f4-745f36384c8d',
-        name: 'Gerar Imagem Fal.ai',
+        id: 'fal-ai-loop',
+        name: 'Fal.ai (Loop de Geração)',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.4,
-        position: [850, 100],
+        position: [1350, 100],
     })
-    GerarImagemFalAi = {
+    FalAiLoopDeGeracao = {
         url: 'https://fal.run/fal-ai/flux-pro',
         method: 'POST',
         authentication: 'genericCredentialType',
@@ -130,192 +167,92 @@ export class LensaiEntregaPremiumWhatsappDriveWorkflow {
         sendBody: true,
         specifyBody: 'json',
         jsonBody: {
-            prompt: "={{ $node['Engenheiro de Prompt (Gemini)'].json.text }}",
-            image_url: "={{ $node['Webhook Pix Status'].json.body.clientPhotoUrl }}",
+            prompt: "={{ $node['Gemini (Engenheiro de Prompt)'].json.text }}",
+            image_url: "={{ $node['Webhook Gateway/Typebot'].json.body.clientPhotoUrls[0] }}",
         },
     };
 
     @node({
-        id: '47e796ad-1460-4a22-a2e4-08ac7ae02779',
+        id: 'drive-folder',
         name: 'Criar Pasta Google Drive',
-        type: 'n8n-nodes-base.googleDrive',
-        version: 3,
-        position: [1100, 100],
-    })
-    CriarPastaGoogleDrive = {
-        resource: 'folder',
-        operation: 'create',
-        name: "={{ $node['Webhook Pix Status'].json.body.clientName }} - {{ $node['Webhook Pix Status'].json.body.style }} - {{ $now.format('dd-MM') }}",
-        options: {},
-    };
-
-    @node({
-        id: 'b7750338-6850-40d3-99cb-7e2611fe74d5',
-        name: 'Download Imagem',
-        type: 'n8n-nodes-base.httpRequest',
-        version: 4.4,
-        position: [1350, 100],
-    })
-    DownloadImagem = {
-        url: '={{ $json.images[0].url }}',
-        method: 'GET',
-        authentication: 'none',
-    };
-
-    @node({
-        id: '3225c793-3a66-4458-913d-54b7d2954083',
-        name: 'Upload Drive',
         type: 'n8n-nodes-base.googleDrive',
         version: 3,
         position: [1600, 100],
     })
-    UploadDrive = {
-        resource: 'file',
-        operation: 'upload',
-        driveId: {
-            mode: 'list',
-            value: '',
-        },
-        folderId: {
-            mode: 'id',
-            value: "={{ $node['Criar Pasta Google Drive'].json.id }}",
-        },
-        inputDataFieldName: 'data',
+    CriarPastaGoogleDrive = {
+        resource: 'folder',
+        operation: 'create',
+        name: "={{ $node['Webhook Gateway/Typebot'].json.body.clientName }} - {{ $node['Webhook Gateway/Typebot'].json.body.theme }}",
     };
 
     @node({
-        id: 'be98e92f-a3d2-46eb-ba27-3d1fbc85736a',
-        name: 'Alterar Permissao Drive',
-        type: 'n8n-nodes-base.googleDrive',
-        version: 3,
+        id: 'evolution-delivery',
+        name: 'Evolution API (Entrega VIP)',
+        type: 'n8n-nodes-base.httpRequest',
+        version: 4.4,
         position: [1850, 100],
     })
-    AlterarPermissaoDrive = {
-        resource: 'file',
-        operation: 'update',
-        fileId: {
-            mode: 'id',
-            value: "={{ $node['Criar Pasta Google Drive'].json.id }}",
-        },
-        permissionsUi: {
-            permissionsValues: [
-                {
-                    role: 'reader',
-                    type: 'anyone',
-                },
-            ],
-        },
-    };
-
-    @node({
-        id: '72c7a735-09fd-4b34-971b-608338d0eab5',
-        name: 'Disparo Instancia A',
-        type: 'n8n-nodes-base.httpRequest',
-        version: 4.4,
-        position: [2100, 100],
-    })
-    DisparoInstanciaA = {
-        url: 'http://sua-evolution-api/message/sendText/Instancia_A',
+    EvolutionApiEntregaVip = {
+        url: 'http://evolution-api:8080/message/sendText/Instancia_Oficial',
         method: 'POST',
         authentication: 'genericCredentialType',
         genericAuthType: 'httpHeaderAuth',
         sendBody: true,
         specifyBody: 'json',
         jsonBody: {
-            number: "={{ $node['Webhook Pix Status'].json.body.clientNumber }}",
-            text: "Suas fotos ficaram prontas! 🎉 Preparamos um link exclusivo na nuvem para você baixar em alta resolução: https://drive.google.com/drive/folders/{{ $node['Criar Pasta Google Drive'].json.id }}?usp=sharing",
+            number: "={{ $node['Webhook Gateway/Typebot'].json.body.clientNumber }}",
+            text: "Obrigado por aguardar, {{ $node['Webhook Gateway/Typebot'].json.body.clientName }}! 🎉 Suas fotos incríveis no tema *{{ $node['Webhook Gateway/Typebot'].json.body.theme }}* ficaram prontas. Acesse seu Drive VIP exclusivo para baixar em altíssima qualidade: https://drive.google.com/drive/folders/{{ $node['Criar Pasta Google Drive'].json.id }}?usp=sharing",
         },
     };
 
     @node({
-        id: '1bd3e862-ce01-4ad8-a04c-5bff7c79769a',
-        name: 'Checar Falha de Entrega',
-        type: 'n8n-nodes-base.if',
-        version: 2.2,
-        position: [2350, 100],
-    })
-    ChecarFalhaDeEntrega = {
-        conditions: {
-            boolean: [],
-            number: [],
-            string: [
-                {
-                    value1: '={{ $json.error }}',
-                    operation: 'notEmpty',
-                },
-            ],
-        },
-    };
-
-    @node({
-        id: '0cc5f8ea-b84a-45dc-a4c1-7394bad7df1f',
-        name: 'Disparo Backup (Instancia B)',
+        id: 'discord-pending',
+        name: 'Discord: Carrinho Abandonado',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.4,
-        position: [2600, -50],
-    })
-    DisparoBackupInstanciaB = {
-        url: 'http://sua-evolution-api/message/sendText/Instancia_B',
-        method: 'POST',
-        authentication: 'genericCredentialType',
-        genericAuthType: 'httpHeaderAuth',
-        sendBody: true,
-        specifyBody: 'json',
-        jsonBody: {
-            number: "={{ $node['Webhook Pix Status'].json.body.clientNumber }}",
-            text: "Nosso sistema principal teve uma instabilidade de rede, mas fizemos questão de entregar agora! 🎉 Segue o link exclusivo na nuvem com suas fotos em alta resolução: https://drive.google.com/drive/folders/{{ $node['Criar Pasta Google Drive'].json.id }}?usp=sharing",
-        },
-    };
-
-    @node({
-        id: 'd654f960-6981-4618-89f9-f31ee8df676a',
-        name: 'Verificar Pendente',
-        type: 'n8n-nodes-base.if',
-        version: 2.2,
         position: [600, 450],
     })
-    VerificarPendente = {
-        conditions: {
-            string: [
-                {
-                    value1: "={{ $node['Webhook Pix Status'].json.body.paymentStatus }}",
-                    operation: 'equal',
-                    value2: 'PENDING',
-                },
-            ],
+    DiscordCarrinhoAbandonado = {
+        url: 'https://discord.com/api/webhooks/SEU_WEBHOOK_AQUI',
+        method: 'POST',
+        sendBody: true,
+        specifyBody: 'json',
+        jsonBody: {
+            content:
+                "🟡 **CARRINHO PENDENTE!** O lead {{ $node['Webhook Gateway/Typebot'].json.body.clientName }} gerou o Pix mas não pagou ainda. Monitorando...",
         },
     };
 
     @node({
-        id: 'cc1f2dac-ef18-4bcf-8aa8-2f9e86f0785a',
-        webhookId: 'fa6138ac-9ba2-405a-93a6-fb99c8fb6b2b',
-        name: 'Aguardar 20 Minutos',
+        id: 'wait-15-mins',
+        webhookId: 'b6d2088b-445a-42a3-8349-18a93828e108',
+        name: 'Aguardar 15 Minutos',
         type: 'n8n-nodes-base.wait',
         version: 1.1,
-        position: [850, 400],
+        position: [850, 450],
     })
-    Aguardar20Minutos = {
-        amount: 20,
+    Aguardar15Minutos = {
+        amount: 15,
         unit: 'minutes',
     };
 
     @node({
-        id: '60abadf3-b0f4-47aa-92ad-59e1269ddbd6',
-        name: 'Disparar Recuperacao Typebot',
+        id: 'evolution-abandoned',
+        name: 'Evolution API (Recuperação)',
         type: 'n8n-nodes-base.httpRequest',
         version: 4.4,
-        position: [1100, 400],
+        position: [1100, 450],
     })
-    DispararRecuperacaoTypebot = {
-        url: 'http://sua-evolution-api/message/sendText/Instancia_A',
+    EvolutionApiRecuperacao = {
+        url: 'http://evolution-api:8080/message/sendText/Instancia_Oficial',
         method: 'POST',
         authentication: 'genericCredentialType',
         genericAuthType: 'httpHeaderAuth',
         sendBody: true,
         specifyBody: 'json',
         jsonBody: {
-            number: "={{ $node['Webhook Pix Status'].json.body.clientNumber }}",
-            text: "Opa {{ $node['Webhook Pix Status'].json.body.clientName }}, vi que você gerou o pedido do ensaio mas o Pix não compensou. Teve algum erro? Se precisar de ajuda ou quiser trocar de pacote, pode me responder aqui!",
+            number: "={{ $node['Webhook Gateway/Typebot'].json.body.clientNumber }}",
+            text: "Opa {{ $node['Webhook Gateway/Typebot'].json.body.clientName }}, tudo bem? Vi que você iniciou o processo do seu ensaio mas o Pix não compensou aqui nos servidores. Teve alguma dificuldade com o app do banco? Me avise se precisar de ajuda!",
         },
     };
 
@@ -325,18 +262,15 @@ export class LensaiEntregaPremiumWhatsappDriveWorkflow {
 
     @links()
     defineRouting() {
-        this.WebhookPixStatus.out(0).to(this.VerificarPagamento.in(0));
-        this.VerificarPagamento.out(0).to(this.EngenheiroDePromptGemini.in(0));
-        this.VerificarPagamento.out(1).to(this.VerificarPendente.in(0));
-        this.EngenheiroDePromptGemini.out(0).to(this.GerarImagemFalAi.in(0));
-        this.GerarImagemFalAi.out(0).to(this.CriarPastaGoogleDrive.in(0));
-        this.CriarPastaGoogleDrive.out(0).to(this.DownloadImagem.in(0));
-        this.DownloadImagem.out(0).to(this.UploadDrive.in(0));
-        this.UploadDrive.out(0).to(this.AlterarPermissaoDrive.in(0));
-        this.AlterarPermissaoDrive.out(0).to(this.DisparoInstanciaA.in(0));
-        this.DisparoInstanciaA.out(0).to(this.ChecarFalhaDeEntrega.in(0));
-        this.ChecarFalhaDeEntrega.out(0).to(this.DisparoBackupInstanciaB.in(0));
-        this.VerificarPendente.out(0).to(this.Aguardar20Minutos.in(0));
-        this.Aguardar20Minutos.out(0).to(this.DispararRecuperacaoTypebot.in(0));
+        this.WebhookGatewayTypebot.out(0).to(this.CheckPaymentStatus.in(0));
+        this.CheckPaymentStatus.out(0).to(this.DiscordVendaRealizada.in(0));
+        this.CheckPaymentStatus.out(1).to(this.DiscordCarrinhoAbandonado.in(0));
+        this.DiscordVendaRealizada.out(0).to(this.MetaCapiPurchase.in(0));
+        this.MetaCapiPurchase.out(0).to(this.GeminiEngenheiroDePrompt.in(0));
+        this.GeminiEngenheiroDePrompt.out(0).to(this.FalAiLoopDeGeracao.in(0));
+        this.FalAiLoopDeGeracao.out(0).to(this.CriarPastaGoogleDrive.in(0));
+        this.CriarPastaGoogleDrive.out(0).to(this.EvolutionApiEntregaVip.in(0));
+        this.DiscordCarrinhoAbandonado.out(0).to(this.Aguardar15Minutos.in(0));
+        this.Aguardar15Minutos.out(0).to(this.EvolutionApiRecuperacao.in(0));
     }
 }

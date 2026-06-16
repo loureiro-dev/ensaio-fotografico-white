@@ -173,7 +173,8 @@
     }
     
     @media (max-width: 500px) {
-      .features-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; gap: 20px; }
+      .feature-card, .price-card, .testim-card { margin-left: 15px; margin-right: 15px; }
       .hero h1 { font-size: 2.2rem; }
       .section-title { font-size: 2rem; }
       .btn { width: 100%; padding: 18px 24px; }
@@ -190,8 +191,8 @@
         <img src="https://i.ibb.co/cKP0XtKb/6cd0574a-9df4-4683-b810-24c7d7b1bb54.png" alt="Ensaio.AI Logo">
       </div>
       <div class="btn-wrapper">
-        <a href="#" onclick="redirectToWhatsApp('Olá, vim pelo site e quero fazer meus ensaios com IA!')" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.95rem;">
-          <i class="ph-bold ph-whatsapp-logo"></i> Fazer Orçamento
+        <a href="#" onclick="scrollToPricing(event)" class="btn btn-primary" style="padding: 10px 20px; font-size: 0.95rem;">
+          <i class="ph-bold ph-caret-down"></i> Ver Planos
         </a>
       </div>
     </div>
@@ -200,10 +201,10 @@
   <section class="hero container">
     <div class="hero-content">
       <span style="color: var(--primary); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 10px;"><i class="ph-fill ph-sparkle"></i> Inteligência Artificial</span>
-      <h1>Você merece a sua melhor versão!</h1>
-      <p>Transforme suas selfies em ensaios incríveis. Seja para o seu perfil corporativo, book de gestante, aniversário ou redes sociais. A magia acontece sem precisar de estúdio.</p>
-      <a href="#" onclick="redirectToWhatsApp('Olá, vim pelo site e quero fazer meus ensaios com IA!')" class="btn btn-primary">
-        Fazer Meu Ensaio Agora <i class="ph-bold ph-arrow-right"></i>
+      <h1>Sua melhor versão em minutos!</h1>
+      <p>Transforme suas selfies em um ensaio fotográfico profissional com Inteligência Artificial. Receba 5 fotos em altíssima resolução no tema que você escolher.</p>
+      <a href="#" onclick="openTypebot(event)" class="btn btn-primary" style="font-size: 1.3rem; padding: 20px 40px;">
+        Criar Ensaio por R$ 19,90 <i class="ph-bold ph-magic-wand"></i>
       </a>
       <div class="trust-badges">
         <span><i class="ph-fill ph-lock-key"></i> Pix Seguro</span>
@@ -320,59 +321,14 @@
     </div>
   </section>
 
-  <!-- Pricing Section -->
-  <section class="pricing-section py-16">
-    <div class="container">
-      <div class="text-center mb-8">
-        <h2 class="section-title">Escolha seu Pacote</h2>
-        <p class="section-subtitle">Investimento transparente e sem surpresas. Eleve sua imagem hoje mesmo.</p>
-      </div>
-      <div class="pricing-grid">
-        <div class="price-card">
-          <h3>Essencial</h3>
-          <div class="price">R$ 29<span>,90</span></div>
-          <ul class="features-list">
-            <li><i class="ph-fill ph-check-circle"></i> 10 fotos em alta resolução</li>
-            <li><i class="ph-fill ph-check-circle"></i> 1 Estilo (Ex: Corporativo, Casual...)</li>
-            <li><i class="ph-fill ph-check-circle"></i> Entrega via Google Drive</li>
-            <li><i class="ph-fill ph-check-circle"></i> Prazo de 8 horas</li>
-          </ul>
-          <button onclick="redirectToWhatsApp('Quero o Pacote Essencial por R$29,90')" class="btn btn-primary" style="width: 100%; background: var(--muted); box-shadow: none;">Escolher Essencial</button>
-        </div>
-        <div class="price-card popular">
-          <div class="popular-badge">Mais Escolhido</div>
-          <h3>Profissional</h3>
-          <div class="price">R$ 59<span>,90</span></div>
-          <ul class="features-list">
-            <li><i class="ph-fill ph-check-circle"></i> 30 fotos em alta resolução</li>
-            <li><i class="ph-fill ph-check-circle"></i> Até 4 Estilos diferentes</li>
-            <li><i class="ph-fill ph-check-circle"></i> Entrega via Google Drive</li>
-            <li><i class="ph-fill ph-check-circle"></i> Prazo de 4 horas</li>
-          </ul>
-          <button onclick="redirectToWhatsApp('Quero o Pacote Profissional por R$59,90')" class="btn btn-primary" style="width: 100%;">Escolher Profissional</button>
-        </div>
-        <div class="price-card">
-          <h3>Premium</h3>
-          <div class="price">R$ 99<span>,90</span></div>
-          <ul class="features-list">
-            <li><i class="ph-fill ph-check-circle"></i> 60 fotos em alta resolução</li>
-            <li><i class="ph-fill ph-check-circle"></i> Até 8 Estilos diferentes</li>
-            <li><i class="ph-fill ph-check-circle"></i> Entrega via Google Drive</li>
-            <li><i class="ph-fill ph-check-circle"></i> Entrega Super Expressa (1h)</li>
-          </ul>
-          <button onclick="redirectToWhatsApp('Quero o Pacote Premium por R$99,90')" class="btn btn-primary" style="width: 100%; background: var(--muted); box-shadow: none;">Escolher Premium</button>
-        </div>
-      </div>
-    </div>
-  </section>
 
   <!-- CTA FINAL (Gradient) -->
   <section class="cta-final">
     <div class="cta-box">
       <h2>Você merece a sua melhor versão!</h2>
       <p>Dê o próximo passo para transformar sua imagem. Clique no botão abaixo e faça seu pedido em menos de 2 minutos!</p>
-      <a href="#" onclick="redirectToWhatsApp('Olá, vim pelo site e quero garantir meu Ensaio Profissional agora!')" class="btn btn-white mt-4">
-        Solicitar Agora <i class="ph-bold ph-arrow-right"></i>
+      <a href="#" onclick="openTypebot(event)" class="btn btn-white mt-4">
+        Começar Agora por R$ 19,90 <i class="ph-bold ph-arrow-right"></i>
       </a>
     </div>
   </section>
@@ -408,26 +364,31 @@
     </div>
   </footer>
 
-  <a href="#" onclick="redirectToWhatsApp('Olá, vim pelo site e quero fazer meus ensaios com IA!')" class="sticky-cta">
-    <i class="ph-fill ph-whatsapp-logo" style="font-size: 1.4rem;"></i> Fazer Meu Ensaio Agora
+  <a href="#" onclick="openTypebot(event)" class="sticky-cta">
+    <i class="ph-bold ph-magic-wand" style="font-size: 1.4rem;"></i> Começar por R$ 19,90
   </a>
 
-  <script>
-    const WA_NUMBERS = [
-      "5511999999999" // TODO: Colocar seu número de teste aqui
-    ];
+  <script type="module">
+    import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
+    
+    Typebot.initPopup({
+      typebot: "ensaio-ai-bot",
+      apiHost: "https://chat.meuensaio.digital",
+      theme: { button: { backgroundColor: "#47E745", iconColor: "#FFFFFF" } }
+    })
 
-    function redirectToWhatsApp(message) {
-      event.preventDefault();
+    window.openTypebot = function(e) {
+      if(e) e.preventDefault();
       
       if (typeof fbq === 'function') {
-        fbq('track', 'Lead');
+        fbq('track', 'InitiateCheckout');
       }
 
-      const num = WA_NUMBERS[Math.floor(Math.random() * WA_NUMBERS.length)];
-      const text = encodeURIComponent(message);
-      window.open(`https://wa.me/${num}?text=${text}`, '_blank');
+      Typebot.open();
     }
+  </script>
+
+  <script>
 
     // Scroll Logic for Sticky CTA
     document.addEventListener('DOMContentLoaded', () => {

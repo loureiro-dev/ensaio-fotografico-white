@@ -2,6 +2,23 @@ version: '3.8'
 
 services:
   # ==========================================
+  # NGINX PROXY MANAGER (SSL E DOMÍNIOS)
+  # ==========================================
+  npm:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: nginx-proxy-manager
+    restart: always
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
+    volumes:
+      - npm_data:/data
+      - npm_letsencrypt:/etc/letsencrypt
+    networks:
+      - lensai_network
+
+  # ==========================================
   # BANCO DE DADOS (POSTGRES)
   # ==========================================
   postgres:
@@ -41,11 +58,16 @@ services:
       - postgres
     environment:
       - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
-      - NEXT_PUBLIC_VIEWER_URL=http://localhost:3001
-      - NEXTAUTH_URL=http://localhost:3000
-      - ADMIN_EMAIL=seuemail@dominio.com # Alterar depois
-    ports:
-      - "3000:3000"
+      - NEXT_PUBLIC_VIEWER_URL=https://chat.meuensaio.digital
+      - NEXTAUTH_URL=https://builder.meuensaio.digital
+      - ADMIN_EMAIL=photoensaio.ai@gmail.com
+      - ENCRYPTION_SECRET=EnsaioDigitalSuperSecretKey2026!
+      - SMTP_USERNAME=photoensaio.ai@gmail.com
+      - SMTP_PASSWORD=emhsahaadclgydsa
+      - SMTP_HOST=smtp.gmail.com
+      - SMTP_PORT=465
+      - SMTP_SECURE=true
+      - NEXT_PUBLIC_SMTP_FROM=photoensaio.ai@gmail.com
     networks:
       - lensai_network
 
@@ -57,9 +79,7 @@ services:
       - postgres
     environment:
       - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
-      - NEXT_PUBLIC_VIEWER_URL=http://localhost:3001
-    ports:
-      - "3001:3000"
+      - NEXT_PUBLIC_VIEWER_URL=https://chat.meuensaio.digital
     networks:
       - lensai_network
 
@@ -67,45 +87,49 @@ services:
   # EVOLUTION API & MANAGER
   # ==========================================
   evolution-api:
-    image: atendai/evolution-api:latest
+    image: evoapicloud/evolution-api:latest
     container_name: evolution-api
     restart: always
     depends_on:
       - postgres
       - redis
-    environment:
-      - SERVER_URL=http://localhost:8080
-      - DOCKER_ENV=true
-      - LOG_LEVEL=ERROR
-      - AUTHENTICATION_TYPE=apikey
-      - AUTHENTICATION_API_KEY=LensAI_Super_Secret_Key_123
-      # Redis Config
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_PREFIX_KEY=evo
-      # Postgres Config
-      - DATABASE_PROVIDER=postgresql
-      - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
-    ports:
-      - "8080:8080"
+    env_file:
+      - ./evo.env
     volumes:
       - evolution_instances:/evolution/instances
     networks:
       - lensai_network
 
+
   evolution-manager:
-    image: gabrielpastori1/evolution-manager:latest
+    image: evoapicloud/evolution-manager:latest
     container_name: evolution-manager
     restart: always
+    volumes:
+      - ./manager-nginx.conf:/etc/nginx/conf.d/nginx.conf
+    networks:
+      - lensai_network
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    container_name: n8n
+    restart: always
     environment:
-      - API_URL=http://evolution-api:8080
-      - API_KEY=LensAI_Super_Secret_Key_123
-    ports:
-      - "8081:80"
+      - N8N_HOST=n8n.meuensaio.digital
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n8n.meuensaio.digital/
+      - GENERIC_TIMEZONE=America/Sao_Paulo
+    volumes:
+      - n8n_data:/home/node/.n8n
     networks:
       - lensai_network
 
 volumes:
+  n8n_data:
+  npm_data:
+  npm_letsencrypt:
   postgres_data:
   redis_data:
   evolution_instances:
