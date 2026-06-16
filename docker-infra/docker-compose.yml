@@ -1,0 +1,115 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # BANCO DE DADOS (POSTGRES)
+  # ==========================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: lensai-postgres
+    restart: always
+    environment:
+      - POSTGRES_USER=lensai
+      - POSTGRES_PASSWORD=lensai_secret
+      - POSTGRES_DB=lensai_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - lensai_network
+
+  # ==========================================
+  # CACHE / FILA (REDIS)
+  # ==========================================
+  redis:
+    image: redis:alpine
+    container_name: lensai-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - lensai_network
+
+  # ==========================================
+  # TYPEBOT (BUILDER & VIEWER)
+  # ==========================================
+  typebot-builder:
+    image: baptistearno/typebot-builder:latest
+    container_name: typebot-builder
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:3001
+      - NEXTAUTH_URL=http://localhost:3000
+      - ADMIN_EMAIL=seuemail@dominio.com # Alterar depois
+    ports:
+      - "3000:3000"
+    networks:
+      - lensai_network
+
+  typebot-viewer:
+    image: baptistearno/typebot-viewer:latest
+    container_name: typebot-viewer
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
+      - NEXT_PUBLIC_VIEWER_URL=http://localhost:3001
+    ports:
+      - "3001:3000"
+    networks:
+      - lensai_network
+
+  # ==========================================
+  # EVOLUTION API & MANAGER
+  # ==========================================
+  evolution-api:
+    image: atendai/evolution-api:latest
+    container_name: evolution-api
+    restart: always
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      - SERVER_URL=http://localhost:8080
+      - DOCKER_ENV=true
+      - LOG_LEVEL=ERROR
+      - AUTHENTICATION_TYPE=apikey
+      - AUTHENTICATION_API_KEY=LensAI_Super_Secret_Key_123
+      # Redis Config
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PREFIX_KEY=evo
+      # Postgres Config
+      - DATABASE_PROVIDER=postgresql
+      - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
+    ports:
+      - "8080:8080"
+    volumes:
+      - evolution_instances:/evolution/instances
+    networks:
+      - lensai_network
+
+  evolution-manager:
+    image: gabrielpastori1/evolution-manager:latest
+    container_name: evolution-manager
+    restart: always
+    environment:
+      - API_URL=http://evolution-api:8080
+      - API_KEY=LensAI_Super_Secret_Key_123
+    ports:
+      - "8081:80"
+    networks:
+      - lensai_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  evolution_instances:
+
+networks:
+  lensai_network:
+    driver: bridge
