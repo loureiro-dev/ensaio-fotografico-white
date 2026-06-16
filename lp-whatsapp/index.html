@@ -32,12 +32,12 @@
       --bg: #F8FAFC;
       --bg2: #FFFFFF;
       --bg3: #F1F5F9;
-      --primary: #10B981;
-      --primary-light: #34D399;
-      --primary-dark: #059669;
+      --primary: #47E745;
+      --primary-light: #6cf06a;
+      --primary-dark: #2da12c;
       --text: #0F172A;
       --muted: #475569;
-      --gradient-green: linear-gradient(135deg, #10B981 0%, #059669 100%);
+      --gradient-green: linear-gradient(135deg, #47E745 0%, #2da12c 100%);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -80,7 +80,7 @@
     }
     .header-content { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; max-width: 1200px; margin: 0 auto; width: 100%; }
     .header-content .logo { justify-self: center; }
-    .header-content .logo img { height: 70px; object-fit: contain; }
+    .header-content .logo img { height: 90px; object-fit: contain; }
     .header-content .btn-wrapper { justify-self: end; }
     
     /* Hero Section */
@@ -147,8 +147,8 @@
     .faq-item.active i { transform: rotate(180deg); color: var(--primary); }
 
     /* Sticky Bottom CTA */
-    .sticky-cta { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #25D366; color: white; border-radius: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; font-weight: 700; padding: 15px 40px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; animation: bounce 3s infinite; white-space: nowrap; width: 90%; max-width: 350px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid white; }
-    @keyframes bounce { 0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); } 40% { transform: translateX(-50%) translateY(-10px); } 60% { transform: translateX(-50%) translateY(-5px); } }
+    .sticky-cta { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(20px); background: #25D366; color: white; border-radius: 50px; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.1rem; font-weight: 700; padding: 15px 40px; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.4); text-decoration: none; z-index: 1000; white-space: nowrap; width: 90%; max-width: 350px; text-transform: uppercase; letter-spacing: 0.5px; border: 2px solid white; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease; }
+    .sticky-cta.visible { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
 
     /* Footer */
     footer { background: #000000; color: white; padding: 60px 0 100px; text-align: center; } /* added bottom padding to clear sticky CTA */
@@ -161,7 +161,7 @@
       .trust-badges { justify-content: center; flex-wrap: wrap; }
       .header-content { display: flex; justify-content: center; }
       .header-content .btn-wrapper { display: none; }
-      .header-content .logo img { height: 55px; }
+      .header-content .logo img { height: 75px; }
       
       .features-grid { grid-template-columns: 1fr 1fr; }
       .pricing-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -401,7 +401,7 @@
   <footer>
     <div class="container">
       <div class="logo mb-4">
-        <img src="https://i.ibb.co/5X4T3BTv/72315d69-7528-469c-8a08-b693c428eae7.png" alt="Ensaio.AI Logo" style="height: 50px;">
+        <img src="https://i.ibb.co/jZ54BcDB/72315d69-7528-469c-8a08-b693c428eae7.png" alt="Ensaio.AI Logo" style="height: 50px;">
       </div>
       <p class="mb-2">&copy; 2024 Ensaio.AI. Todos os direitos reservados.</p>
       <p><a href="#">Política de Privacidade</a> | <a href="#">Termos de Uso</a></p>
@@ -409,7 +409,7 @@
   </footer>
 
   <a href="#" onclick="redirectToWhatsApp('Olá, vim pelo site e quero fazer meus ensaios com IA!')" class="sticky-cta">
-    <i class="ph-fill ph-whatsapp-logo" style="font-size: 1.4rem;"></i> Fazer Meu Ensaio
+    <i class="ph-fill ph-whatsapp-logo" style="font-size: 1.4rem;"></i> Fazer Meu Ensaio Agora
   </a>
 
   <script>
@@ -428,6 +428,22 @@
       const text = encodeURIComponent(message);
       window.open(`https://wa.me/${num}?text=${text}`, '_blank');
     }
+
+    // Scroll Logic for Sticky CTA
+    document.addEventListener('DOMContentLoaded', () => {
+      const stickyCta = document.querySelector('.sticky-cta');
+      const heroSection = document.querySelector('.hero');
+
+      window.addEventListener('scroll', () => {
+        const heroBottom = heroSection.getBoundingClientRect().bottom;
+        // Se passarmos do final do hero, mostra o botão
+        if (heroBottom < 0) {
+          stickyCta.classList.add('visible');
+        } else {
+          stickyCta.classList.remove('visible');
+        }
+      });
+    });
   </script>
 </body>
 </html>
