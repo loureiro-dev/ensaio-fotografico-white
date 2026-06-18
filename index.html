@@ -690,6 +690,7 @@
       theme: { button: { backgroundColor: "#47E745", iconColor: "#FFFFFF" } }
     })
 
+    window.Typebot = Typebot;
     window.__typebotOpen = function() { Typebot.open(); }
   </script>
 
@@ -826,8 +827,8 @@
       if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
       document.getElementById('cardOverlay').classList.remove('active');
       
-      if (Typebot) {
-        Typebot.setHiddenVariables({
+      if (window.Typebot) {
+        window.Typebot.setHiddenVariables({
           NomeCliente: userName,
           TemaEscolhido: userTheme
         });
