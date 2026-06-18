@@ -1,0 +1,338 @@
+{
+  "version": "6",
+  "id": "ensaioai001",
+  "name": "Ensaio.AI — Funil de Alta Conversão",
+  "variables": [
+    { "id": "v1", "name": "NomeCliente" },
+    { "id": "v2", "name": "WhatsAppCliente" },
+    { "id": "v3", "name": "PacoteEscolhido" },
+    { "id": "v4", "name": "FotosCliente" },
+    { "id": "v5", "name": "StatusPagamento" },
+    { "id": "v6", "name": "PixCopiaCola" },
+    { "id": "v7", "name": "EmailCliente" },
+    { "id": "v8", "name": "CPFCliente" },
+    { "id": "v9", "name": "TemaEscolhido" },
+    { "id": "v10", "name": "TemaCustomizado" },
+    { "id": "v11", "name": "PixQrCode" }
+  ],
+  "events": [
+    {
+      "id": "start1",
+      "type": "start",
+      "graphCoordinates": { "x": 0, "y": 0 },
+      "outgoingEdgeId": "e0"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g1",
+      "title": "Grupo 1 — Captura de Lead",
+      "graphCoordinates": { "x": 300, "y": 0 },
+      "blocks": [
+        {
+          "id": "b1",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Oi! Eu sou a IA do Ensaio.AI e estou aqui para criar o seu ensaio exclusivo. 🎯" }] }
+            ]
+          },
+          "outgoingEdgeId": "e1"
+        },
+        {
+          "id": "b5_text",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "E qual é o seu WhatsApp com DDD?" }] }
+            ]
+          },
+          "outgoingEdgeId": "e5_text"
+        },
+        {
+          "id": "b5",
+          "type": "phone number input",
+          "options": {
+            "variableId": "v2",
+            "defaultCountryCode": "BR",
+            "labels": {
+              "placeholder": "(11) 99999-9999",
+              "button": "Continuar"
+            }
+          },
+          "outgoingEdgeId": "e5"
+        },
+        {
+          "id": "b6",
+          "type": "Webhook",
+          "options": {
+            "webhook": {
+              "method": "POST",
+              "url": "https://n8n.meuensaio.digital/webhook/ensaio-lead-iniciou",
+              "headers": [
+                { "id": "h1", "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\"nome\": \"{{NomeCliente}}\", \"whatsapp\": \"{{WhatsAppCliente}}\", \"evento\": \"lead_iniciou_checkout\"}"
+            }
+          },
+          "outgoingEdgeId": "e6"
+        }
+      ]
+    },
+    {
+      "id": "g2",
+      "title": "Grupo 2 — Estilo e Fotos",
+      "graphCoordinates": { "x": 700, "y": 0 },
+      "blocks": [
+        {
+          "id": "b_ponte",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Perfeito, {{NomeCliente}}! 🎉 O tema escolhido foi: {{TemaEscolhido}}. Excelente escolha! Agora vem a parte principal: as suas fotos de referência. 📸" }] }
+            ]
+          },
+          "outgoingEdgeId": "e_ponte"
+        },
+        {
+          "id": "b8",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Envie de 3 a 5 fotos suas. ⚠️ IMPORTANTE: Para a IA gerar um resultado perfeito, envie selfies de frente, bem iluminadas, SEM óculos escuros, SEM boné/chapéu e SOZINHO(A) na foto." }] }
+            ]
+          },
+          "outgoingEdgeId": "e8"
+        },
+        {
+          "id": "b9",
+          "type": "file input",
+          "options": {
+            "variableId": "v4",
+            "isMultipleAllowed": true,
+            "labels": {
+              "placeholder": "📎 Clique para enviar suas fotos",
+              "button": "Enviar Fotos"
+            },
+            "visibility": "Public"
+          },
+          "outgoingEdgeId": "e9"
+        }
+      ]
+    },
+    {
+      "id": "g3",
+      "title": "Grupo 3 — Oferta e Checkout",
+      "graphCoordinates": { "x": 1100, "y": 0 },
+      "blocks": [
+        {
+          "id": "b10",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Fotos recebidas com sucesso! Elas estão ótimas. 🔥" }] }
+            ]
+          },
+          "outgoingEdgeId": "e10"
+        },
+        {
+          "id": "b11",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [
+                { "text": "O seu pacote básico inclui " },
+                { "text": "5 Fotos em Alta Resolução", "bold": true },
+                { "text": " no estilo escolhido por apenas " },
+                { "text": "R$ 19,90", "bold": true },
+                { "text": "." }
+              ]}
+            ]
+          },
+          "outgoingEdgeId": "e11"
+        },
+        {
+          "id": "b_upsell_text",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [
+                { "text": "🔥 " },
+                { "text": "OPORTUNIDADE DE UPSELL:", "bold": true },
+                { "text": " Gostaria de adicionar " },
+                { "text": "+10 fotos extras", "bold": true },
+                { "text": " em estilos artísticos variados (totalizando 15 fotos) por apenas " },
+                { "text": "+R$ 14,90", "bold": true },
+                { "text": "? (De R$ 49,90 por apenas R$ 34,80 no total!)" }
+              ]}
+            ]
+          },
+          "outgoingEdgeId": "e_upsell_text"
+        },
+        {
+          "id": "b_upsell_choice",
+          "type": "choice input",
+          "options": {
+            "variableId": "v3",
+            "isMultipleChoice": false,
+            "labels": { "button": "Confirmar Escolha" }
+          },
+          "items": [
+            { "id": "p1", "content": "Sim! Adicionar +10 fotos (+R$ 14,90)" },
+            { "id": "p2", "content": "Não, quero apenas as 5 fotos por R$ 19,90" }
+          ]
+        },
+        {
+          "id": "b_cpf_text",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Quase lá! 🔐 Por exigência do Banco Central, o PIX precisa do seu CPF para ser gerado com segurança. Seus dados são criptografados e usados apenas para esta cobrança." }] }
+            ]
+          },
+          "outgoingEdgeId": "e_cpf_text"
+        },
+        {
+          "id": "b_cpf_input",
+          "type": "text input",
+          "options": {
+            "variableId": "v8",
+            "labels": {
+              "placeholder": "000.000.000-00",
+              "button": "Gerar Pix"
+            }
+          },
+          "outgoingEdgeId": "e_cpf_input"
+        },
+        {
+          "id": "b12",
+          "type": "Webhook",
+          "options": {
+            "webhook": {
+              "method": "POST",
+              "url": "https://n8n.meuensaio.digital/webhook/ensaio-gerar-pix",
+              "headers": [
+                { "id": "h2", "key": "Content-Type", "value": "application/json" }
+              ],
+              "body": "{\"nome\": \"{{NomeCliente}}\", \"whatsapp\": \"{{WhatsAppCliente}}\", \"cpf\": \"{{CPFCliente}}\", \"tema\": \"{{TemaEscolhido}}\", \"tema_custom\": \"{{TemaCustomizado}}\", \"pacote\": \"{{PacoteEscolhido}}\", \"fotos\": \"{{FotosCliente}}\"}"
+            },
+            "responseVariableMapping": [
+              { "id": "r1", "bodyPath": "pix_copia_cola", "variableId": "v6" },
+              { "id": "r2", "bodyPath": "pix_qr_code", "variableId": "v11" },
+              { "id": "r3", "bodyPath": "status", "variableId": "v5" }
+            ]
+          },
+          "outgoingEdgeId": "e12"
+        },
+        {
+          "id": "b13",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Pix gerado com sucesso! Escaneie o QR Code abaixo com o aplicativo do seu banco: 👇" }] }
+            ]
+          },
+          "outgoingEdgeId": "e13"
+        },
+        {
+          "id": "b_qrcode_img",
+          "type": "image",
+          "content": {
+            "url": "{{PixQrCode}}"
+          },
+          "outgoingEdgeId": "e_qrcode"
+        },
+        {
+          "id": "b14",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "Ou use a chave Pix Copia e Cola clicando duas vezes no código abaixo:" }] }
+            ]
+          },
+          "outgoingEdgeId": "e14"
+        },
+        {
+          "id": "b_pix_copy",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "{{PixCopiaCola}}" }] }
+            ]
+          },
+          "outgoingEdgeId": "e_pix_copy"
+        },
+        {
+          "id": "b15",
+          "type": "text",
+          "content": {
+            "richText": [
+              { "type": "p", "children": [{ "text": "⏳ Assim que você realizar o pagamento, nosso sistema identificará automaticamente. Você receberá as fotos prontas direto no seu WhatsApp em alguns minutos! Pode fechar esta página quando quiser. Obrigado!" }] }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    { "id": "e0", "from": { "eventId": "start1" }, "to": { "groupId": "g1" } },
+    { "id": "e1", "from": { "blockId": "b1" }, "to": { "groupId": "g1", "blockId": "b5_text" } },
+    { "id": "e5_text", "from": { "blockId": "b5_text" }, "to": { "groupId": "g1", "blockId": "b5" } },
+    { "id": "e5", "from": { "blockId": "b5" }, "to": { "groupId": "g1", "blockId": "b6" } },
+    { "id": "e6", "from": { "blockId": "b6" }, "to": { "groupId": "g2", "blockId": "b_ponte" } },
+    { "id": "e_ponte", "from": { "blockId": "b_ponte" }, "to": { "groupId": "g2", "blockId": "b8" } },
+    { "id": "e8", "from": { "blockId": "b8" }, "to": { "groupId": "g2", "blockId": "b9" } },
+    { "id": "e9", "from": { "blockId": "b9" }, "to": { "groupId": "g3", "blockId": "b10" } },
+    { "id": "e10", "from": { "blockId": "b10" }, "to": { "groupId": "g3", "blockId": "b11" } },
+    { "id": "e11", "from": { "blockId": "b11" }, "to": { "groupId": "g3", "blockId": "b_upsell_text" } },
+    { "id": "e_upsell_text", "from": { "blockId": "b_upsell_text" }, "to": { "groupId": "g3", "blockId": "b_upsell_choice" } },
+    { "id": "e_p1", "from": { "blockId": "b_upsell_choice", "itemId": "p1" }, "to": { "groupId": "g3", "blockId": "b_cpf_text" } },
+    { "id": "e_p2", "from": { "blockId": "b_upsell_choice", "itemId": "p2" }, "to": { "groupId": "g3", "blockId": "b_cpf_text" } },
+    { "id": "e_cpf_text", "from": { "blockId": "b_cpf_text" }, "to": { "groupId": "g3", "blockId": "b_cpf_input" } },
+    { "id": "e_cpf_input", "from": { "blockId": "b_cpf_input" }, "to": { "groupId": "g3", "blockId": "b12" } },
+    { "id": "e12", "from": { "blockId": "b12" }, "to": { "groupId": "g3", "blockId": "b13" } },
+    { "id": "e13", "from": { "blockId": "b13" }, "to": { "groupId": "g3", "blockId": "b_qrcode_img" } },
+    { "id": "e_qrcode", "from": { "blockId": "b_qrcode_img" }, "to": { "groupId": "g3", "blockId": "b14" } },
+    { "id": "e14", "from": { "blockId": "b14" }, "to": { "groupId": "g3", "blockId": "b_pix_copy" } },
+    { "id": "e_pix_copy", "from": { "blockId": "b_pix_copy" }, "to": { "groupId": "g3", "blockId": "b15" } }
+  ],
+  "theme": {
+    "general": {
+      "font": "Inter",
+      "background": {
+        "type": "Color",
+        "content": "#0a0a0f"
+      }
+    },
+    "chat": {
+      "hostBubbles": {
+        "backgroundColor": "#1a1a2e",
+        "color": "#e0e0ff"
+      },
+      "guestBubbles": {
+        "backgroundColor": "#7c3aed",
+        "color": "#ffffff"
+      },
+      "input": {
+        "backgroundColor": "#1a1a2e",
+        "color": "#e0e0ff",
+        "placeholderColor": "#6b7280"
+      },
+      "buttons": {
+        "backgroundColor": "#7c3aed",
+        "color": "#ffffff"
+      }
+    }
+  },
+  "settings": {
+    "general": {
+      "isBrandingEnabled": false,
+      "isInputPrefillEnabled": true
+    },
+    "typingEmulation": {
+      "enabled": true,
+      "speed": 300,
+      "maxDelay": 1.5
+    }
+  }
+}

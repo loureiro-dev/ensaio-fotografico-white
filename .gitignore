@@ -1,0 +1,32 @@
+# ==============================================
+# GITIGNORE - ENSAIO.AI
+# ==============================================
+
+# ⚠️ SEGREDOS — NUNCA SUBIR
+*.env
+!*.env.example
+
+# Logs de execução (arquivos grandes gerados localmente)
+exec*.txt
+*.log
+
+# Pastas de estado local do n8n-as-code
+.n8nac/
+tmp-validate/
+
+# Dependências Node (se houver)
+node_modules/
+package-lock.json
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/settings.json
+.idea/
+
+# Builds e cache
+dist/
+.cache/

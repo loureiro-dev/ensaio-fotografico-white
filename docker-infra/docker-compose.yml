@@ -120,6 +120,7 @@ services:
       - N8N_PROTOCOL=https
       - NODE_ENV=production
       - WEBHOOK_URL=https://n8n.meuensaio.digital/
+      - N8N_EDITOR_BASE_URL=https://n8n.meuensaio.digital
       - GENERIC_TIMEZONE=America/Sao_Paulo
     volumes:
       - n8n_data:/home/node/.n8n
