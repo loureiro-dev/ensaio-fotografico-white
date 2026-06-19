@@ -73,6 +73,7 @@ services:
       - S3_BUCKET=ensaio-uploads
       - S3_ENDPOINT=https://2903d630f471a8438ea1a3bb6ed9b6ba.r2.cloudflarestorage.com
       - S3_SSL=true
+      - S3_REGION=auto
     networks:
       - lensai_network
 
@@ -92,6 +93,7 @@ services:
       - S3_BUCKET=ensaio-uploads
       - S3_ENDPOINT=https://2903d630f471a8438ea1a3bb6ed9b6ba.r2.cloudflarestorage.com
       - S3_SSL=true
+      - S3_REGION=auto
     networks:
       - lensai_network
 
