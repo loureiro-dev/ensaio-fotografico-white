@@ -68,6 +68,11 @@ services:
       - SMTP_PORT=465
       - SMTP_SECURE=true
       - NEXT_PUBLIC_SMTP_FROM=photoensaio.ai@gmail.com
+      - S3_ACCESS_KEY=36a3c794408a002e54ba824e8c19a2eb
+      - S3_SECRET_KEY=1a9b1a9f3d6255c5bdaa1809b0293090196a43ceb353257e85a41dcd68af30ff
+      - S3_BUCKET=ensaio-uploads
+      - S3_ENDPOINT=https://2903d630f471a8438ea1a3bb6ed9b6ba.r2.cloudflarestorage.com
+      - S3_SSL=true
     networks:
       - lensai_network
 
@@ -80,6 +85,13 @@ services:
     environment:
       - DATABASE_URL=postgresql://lensai:lensai_secret@postgres:5432/lensai_db?schema=public
       - NEXT_PUBLIC_VIEWER_URL=https://chat.meuensaio.digital
+      - NEXTAUTH_URL=https://builder.meuensaio.digital
+      - ENCRYPTION_SECRET=EnsaioDigitalSuperSecretKey2026!
+      - S3_ACCESS_KEY=36a3c794408a002e54ba824e8c19a2eb
+      - S3_SECRET_KEY=1a9b1a9f3d6255c5bdaa1809b0293090196a43ceb353257e85a41dcd68af30ff
+      - S3_BUCKET=ensaio-uploads
+      - S3_ENDPOINT=https://2903d630f471a8438ea1a3bb6ed9b6ba.r2.cloudflarestorage.com
+      - S3_SSL=true
     networks:
       - lensai_network
 
