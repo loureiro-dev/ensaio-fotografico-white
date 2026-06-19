@@ -684,14 +684,25 @@
   <script type="module">
     import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
     
-    Typebot.initPopup({
-      typebot: "ensaio-ai-bot",
-      apiHost: "https://chat.meuensaio.digital",
-      theme: { button: { backgroundColor: "#47E745", iconColor: "#FFFFFF" } }
-    })
-
     window.Typebot = Typebot;
-    window.__typebotOpen = function() { Typebot.open(); }
+
+    window.__typebotOpen = function(nome, tema) {
+      // Destrói instância anterior para garantir reset no mobile
+      try { Typebot.destroy(); } catch(e) {}
+
+      Typebot.initPopup({
+        typebot: "ensaio-ai-bot",
+        apiHost: "https://chat.meuensaio.digital",
+        autoShowDelay: 0,
+        prefilledVariables: {
+          NomeCliente: nome || "",
+          TemaEscolhido: tema || ""
+        },
+        theme: { button: { backgroundColor: "#47E745", iconColor: "#FFFFFF" } }
+      });
+
+      setTimeout(function() { Typebot.open(); }, 300);
+    }
   </script>
 
   <script>
@@ -827,19 +838,7 @@
       if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
       document.getElementById('cardOverlay').classList.remove('active');
       
-      if (window.Typebot && typeof window.Typebot.setPrefilledVariables === 'function') {
-        window.Typebot.setPrefilledVariables({
-          NomeCliente: userName,
-          TemaEscolhido: userTheme
-        });
-      } else if (window.Typebot && typeof window.Typebot.setHiddenVariables === 'function') {
-        window.Typebot.setHiddenVariables({
-          NomeCliente: userName,
-          TemaEscolhido: userTheme
-        });
-      }
-
-      if (window.__typebotOpen) window.__typebotOpen();
+      if (window.__typebotOpen) window.__typebotOpen(userName, userTheme);
     }
 
     window.openTypebot = function(e) {
