@@ -11,6 +11,7 @@ exec*.txt
 *.log
 
 # Pastas de estado local do n8n-as-code
+docker-infra/docker-compose.yml
 .n8nac/
 tmp-validate/
 
