@@ -681,28 +681,41 @@
     </div>
   </div>
 
-  <script type="module">
-    import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0.3/dist/web.js'
-    
-    window.Typebot = Typebot;
+  <!-- Modal iframe para Typebot (evita CORS do JS embed) -->
+  <div id="typebotModal" style="display:none; position:fixed; inset:0; z-index:99999; background:rgba(0,0,0,0.7); backdrop-filter:blur(4px); align-items:center; justify-content:center;">
+    <div style="position:relative; width:min(480px, 96vw); height:min(750px, 92vh); border-radius:20px; overflow:hidden; box-shadow:0 30px 80px rgba(0,0,0,0.5);">
+      <button onclick="closeTypebotModal()" style="position:absolute; top:12px; right:14px; z-index:10; background:rgba(0,0,0,0.5); border:none; color:#fff; font-size:1.4rem; line-height:1; width:34px; height:34px; border-radius:50%; cursor:pointer;">×</button>
+      <iframe id="typebotIframe" src="" allow="camera; microphone; clipboard-write" style="width:100%; height:100%; border:none; display:block;"></iframe>
+    </div>
+  </div>
 
+  <script>
     window.__typebotOpen = function(nome, tema) {
-      // Destrói instância anterior para garantir reset no mobile
-      try { Typebot.destroy(); } catch(e) {}
+      const modal = document.getElementById('typebotModal');
+      const iframe = document.getElementById('typebotIframe');
 
-      Typebot.initPopup({
-        typebot: "ensaio-ai-bot",
-        apiHost: "https://chat.meuensaio.digital",
-        autoShowDelay: 0,
-        prefilledVariables: {
-          NomeCliente: nome || "",
-          TemaEscolhido: tema || ""
-        },
-        theme: { button: { backgroundColor: "#47E745", iconColor: "#FFFFFF" } }
-      });
+      // Monta URL com variáveis pré-preenchidas
+      const params = new URLSearchParams();
+      if (nome)  params.set('NomeCliente',   nome);
+      if (tema)  params.set('TemaEscolhido', tema);
+      const query = params.toString() ? '?' + params.toString() : '';
 
-      setTimeout(function() { Typebot.open(); }, 300);
-    }
+      iframe.src = 'https://chat.meuensaio.digital/typebots/ensaio-ai-bot/start' + query;
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+    };
+
+    window.closeTypebotModal = function() {
+      const modal = document.getElementById('typebotModal');
+      document.getElementById('typebotIframe').src = '';
+      modal.style.display = 'none';
+      document.body.style.overflow = '';
+    };
+
+    // Fechar clicando no fundo
+    document.getElementById('typebotModal').addEventListener('click', function(e) {
+      if (e.target === this) closeTypebotModal();
+    });
   </script>
 
   <script>
