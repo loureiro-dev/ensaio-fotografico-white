@@ -700,7 +700,7 @@
       if (tema)  params.set('TemaEscolhido', tema);
       const query = params.toString() ? '?' + params.toString() : '';
 
-      iframe.src = 'https://chat.meuensaio.digital/typebots/ensaio-ai-bot/start' + query;
+      iframe.src = 'https://chat.meuensaio.digital/ensaio-ai-bot' + query;
       modal.style.display = 'flex';
       document.body.style.overflow = 'hidden';
     };
